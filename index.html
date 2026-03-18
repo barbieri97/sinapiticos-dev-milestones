@@ -1,0 +1,1315 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Marcos do Desenvolvimento Infantil</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --green: #1a6b8a;
+        --green-light: #e6f4f8;
+        --green-mid: #9dd0de;
+        --blue: #3a7bd5;
+        --blue-light: #e8f0fb;
+        --orange: #e8a020;
+        --orange-light: #fdf3e0;
+        --purple: #7c5cbf;
+        --purple-light: #f0ebfa;
+        --red: #e05252;
+        --red-light: #fdeaea;
+        --yellow: #f5c518;
+        --yellow-light: #fdf9e3;
+        --bg: #f5f0e6;
+        --card: #ffffff;
+        --text: #1a3a5c;
+        --text-soft: #5a6a7e;
+        --border: #dde4ef;
+        --radius: 16px;
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Nunito", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      /* HEADER */
+      header {
+        background: linear-gradient(
+          135deg,
+          #0d4a63 0%,
+          #1a6b8a 60%,
+          #3faabb 100%
+        );
+        color: white;
+        padding: 0;
+        position: relative;
+        overflow: hidden;
+      }
+      header::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -80px;
+        width: 320px;
+        height: 320px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 50%;
+      }
+      header::after {
+        content: "";
+        position: absolute;
+        bottom: -40px;
+        left: 40px;
+        width: 180px;
+        height: 180px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+      }
+      .header-inner {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 36px 24px 36px;
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 28px;
+      }
+      .header-logo {
+        flex-shrink: 0;
+        width: 110px;
+        height: 110px;
+        border-radius: 20px;
+        overflow: hidden;
+        background: rgba(255,255,255,0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .header-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 6px;
+      }
+      .header-content {
+        flex: 1;
+      }
+      .header-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        padding: 4px 14px;
+        margin-bottom: 18px;
+        text-transform: uppercase;
+      }
+      header h1 {
+        font-family: "Lora", serif;
+        font-size: clamp(26px, 5vw, 40px);
+        font-weight: 600;
+        line-height: 1.2;
+        margin-bottom: 12px;
+      }
+      header p {
+        font-size: 16px;
+        opacity: 0.88;
+        max-width: 560px;
+        line-height: 1.6;
+      }
+
+      /* EMOJI DECORATIONS */
+      .header-emojis {
+        position: absolute;
+        right: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 52px;
+        line-height: 1.3;
+        text-align: center;
+        opacity: 0.85;
+      }
+
+      /* MAIN */
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 36px 20px 60px;
+      }
+
+      /* SELECTOR CARD */
+      .selector-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 32px 28px;
+        margin-bottom: 28px;
+        border: 1.5px solid var(--border);
+      }
+      .selector-card h2 {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--green);
+        margin-bottom: 6px;
+      }
+      .selector-card p {
+        font-size: 14px;
+        color: var(--text-soft);
+        margin-bottom: 20px;
+      }
+      .age-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .age-btn {
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: 2px solid var(--border);
+        background: var(--bg);
+        font-family: "Nunito", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-soft);
+        cursor: pointer;
+        transition: all 0.18s;
+      }
+      .age-btn:hover {
+        border-color: var(--green);
+        color: var(--green);
+        background: var(--green-light);
+      }
+      .age-btn.active {
+        background: var(--green);
+        border-color: var(--green);
+        color: white;
+        box-shadow: 0 2px 12px rgba(26, 107, 138, 0.3);
+      }
+
+      /* RESULTS */
+      #results {
+        display: none;
+      }
+      #results.visible {
+        display: block;
+      }
+
+      .results-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .results-age-badge {
+        background: var(--green);
+        color: white;
+        border-radius: var(--radius);
+        padding: 14px 22px;
+        font-size: 22px;
+        font-weight: 900;
+        line-height: 1;
+        white-space: nowrap;
+      }
+      .results-age-badge small {
+        display: block;
+        font-size: 11px;
+        font-weight: 600;
+        opacity: 0.8;
+        margin-bottom: 2px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .results-intro {
+        font-size: 15px;
+        color: var(--text-soft);
+        line-height: 1.6;
+      }
+
+      /* DOMAIN CARDS */
+      .domain-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        margin-bottom: 20px;
+        border: 1.5px solid var(--border);
+        overflow: hidden;
+      }
+      .domain-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px 24px;
+        border-bottom: 1.5px solid var(--border);
+      }
+      .domain-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .domain-header h3 {
+        font-size: 16px;
+        font-weight: 800;
+      }
+      .domain-header p {
+        font-size: 13px;
+        color: var(--text-soft);
+        margin-top: 2px;
+      }
+
+      /* Domain colors */
+      .domain-social .domain-icon {
+        background: var(--orange-light);
+      }
+      .domain-social .domain-header h3 {
+        color: var(--orange);
+      }
+      .domain-language .domain-icon {
+        background: var(--blue-light);
+      }
+      .domain-language .domain-header h3 {
+        color: var(--blue);
+      }
+      .domain-cognitive .domain-icon {
+        background: var(--purple-light);
+      }
+      .domain-cognitive .domain-header h3 {
+        color: var(--purple);
+      }
+      .domain-motor .domain-icon {
+        background: var(--green-light);
+      }
+      .domain-motor .domain-header h3 {
+        color: var(--green);
+      }
+
+      /* MILESTONE LIST */
+      .milestone-list {
+        padding: 8px 0;
+      }
+      .milestone-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 13px 24px;
+        border-bottom: 1px solid #f0f3f8;
+        transition: background 0.12s;
+      }
+      .milestone-item:last-child {
+        border-bottom: none;
+      }
+      .milestone-item:hover {
+        background: var(--bg);
+      }
+      .milestone-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        margin-top: 6px;
+        flex-shrink: 0;
+      }
+      .domain-social .milestone-dot {
+        background: var(--orange);
+      }
+      .domain-language .milestone-dot {
+        background: var(--blue);
+      }
+      .domain-cognitive .milestone-dot {
+        background: var(--purple);
+      }
+      .domain-motor .milestone-dot {
+        background: var(--green);
+      }
+
+      .milestone-text {
+        flex: 1;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--text);
+      }
+      .milestone-age {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 999px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .age-exact {
+        background: var(--green-light);
+        color: var(--green);
+      }
+      .age-before {
+        background: var(--yellow-light);
+        color: #a07a00;
+      }
+      .age-after {
+        background: var(--blue-light);
+        color: var(--blue);
+      }
+
+      /* LEGEND */
+      .legend {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--text-soft);
+        font-weight: 600;
+      }
+      .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 4px;
+      }
+
+      /* INFO SECTION */
+      .info-section {
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 28px;
+        margin-top: 32px;
+        border: 1.5px solid var(--border);
+      }
+      .info-section h2 {
+        font-family: "Lora", serif;
+        font-size: 22px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 20px;
+        padding-bottom: 14px;
+        border-bottom: 2px solid var(--green-light);
+      }
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .info-box {
+        border-radius: 12px;
+        padding: 18px;
+        border: 1.5px solid var(--border);
+      }
+      .info-box-icon {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+      .info-box h4 {
+        font-size: 14px;
+        font-weight: 800;
+        margin-bottom: 6px;
+      }
+      .info-box p {
+        font-size: 13px;
+        color: var(--text-soft);
+        line-height: 1.6;
+      }
+      .info-box.green {
+        background: var(--green-light);
+        border-color: var(--green-mid);
+      }
+      .info-box.green h4 {
+        color: var(--green);
+      }
+      .info-box.blue {
+        background: var(--blue-light);
+        border-color: #b3cef5;
+      }
+      .info-box.blue h4 {
+        color: var(--blue);
+      }
+      .info-box.orange {
+        background: var(--orange-light);
+        border-color: #f5c99b;
+      }
+      .info-box.orange h4 {
+        color: var(--orange);
+      }
+      .info-box.purple {
+        background: var(--purple-light);
+        border-color: #c9b8f0;
+      }
+      .info-box.purple h4 {
+        color: var(--purple);
+      }
+
+      .info-highlight {
+        background: linear-gradient(
+          135deg,
+          var(--green-light),
+          var(--blue-light)
+        );
+        border-radius: 12px;
+        padding: 18px 22px;
+        border-left: 4px solid var(--green);
+        margin-bottom: 18px;
+      }
+      .info-highlight p {
+        font-size: 14px;
+        color: var(--text);
+        line-height: 1.7;
+      }
+      .info-highlight strong {
+        color: var(--green);
+      }
+
+      /* REFERENCE SECTION */
+      .ref-section {
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 24px 28px;
+        margin-top: 20px;
+        border: 1.5px solid var(--border);
+      }
+      .ref-section h3 {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ref-item {
+        font-size: 13px;
+        color: var(--text-soft);
+        line-height: 1.6;
+        margin-bottom: 10px;
+        padding-left: 14px;
+        border-left: 3px solid var(--border);
+      }
+      .ref-item a {
+        color: var(--blue);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .ref-item a:hover {
+        text-decoration: underline;
+      }
+
+      .download-links {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+      .download-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--bg);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-family: "Nunito", sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.15s;
+      }
+      .download-btn:hover {
+        border-color: var(--green);
+        color: var(--green);
+        background: var(--green-light);
+      }
+      .download-btn span {
+        font-size: 16px;
+      }
+
+      /* EMPTY STATE */
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-soft);
+      }
+      .empty-state .emoji {
+        font-size: 56px;
+        margin-bottom: 16px;
+      }
+      .empty-state h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--text);
+      }
+      .empty-state p {
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      /* FOOTER */
+      footer {
+        text-align: center;
+        padding: 28px 20px;
+        font-size: 12px;
+        color: var(--text-soft);
+        border-top: 1.5px solid var(--border);
+        background: var(--card);
+        margin-top: 40px;
+      }
+      .footer-contact {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+        border-bottom: 1.5px solid var(--border);
+      }
+      .footer-contact a {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        padding: 9px 18px;
+        border-radius: 999px;
+        transition: all 0.15s;
+      }
+      .footer-contact a.instagram {
+        background: #fdf3e0;
+        color: #c96c00;
+        border: 1.5px solid #f5c99b;
+      }
+      .footer-contact a.instagram:hover {
+        background: #e8a020;
+        color: white;
+        border-color: #e8a020;
+      }
+      .footer-contact a.whatsapp {
+        background: #e6f4f8;
+        color: #1a6b8a;
+        border: 1.5px solid #9dd0de;
+      }
+      .footer-contact a.whatsapp:hover {
+        background: #1a6b8a;
+        color: white;
+        border-color: #1a6b8a;
+      }
+
+      @media (max-width: 600px) {
+        .header-inner {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+        }
+        .header-logo {
+          width: 80px;
+          height: 80px;
+        }
+        .header-emojis {
+          display: none;
+        }
+        .results-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .download-links {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <div class="header-logo">
+          <img src="logo.jpeg" alt="Sinapíticos — Clínica de Neuropsicologia Infantil" />
+        </div>
+        <div class="header-content">
+          <div class="header-badge">Clínica de Neuropsicologia Infantil</div>
+          <h1>Marcos do Desenvolvimento Infantil</h1>
+          <p>
+            Baseado nos checklists revisados pelo CDC e pela Academia Americana de
+            Pediatria (AAP), com critério científico de 75% de alcance.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- SELECTOR -->
+      <div class="selector-card">
+        <h2>🔍 Selecione a idade da criança</h2>
+        <p>
+          Clique em uma faixa etária para visualizar os marcos esperados para
+          aquela fase, com contexto das habilidades anteriores e posteriores.
+        </p>
+        <div class="age-grid" id="ageGrid"></div>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="results">
+        <div class="results-header">
+          <div class="results-age-badge">
+            <small>Consultando</small>
+            <span id="selectedAgeLabel">—</span>
+          </div>
+          <p class="results-intro" id="resultsIntro"></p>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background: #1a6b8a"></div>
+            Marco desta idade
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: #f5c518"></div>
+            Habilidade anterior
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: #3a7bd5"></div>
+            Habilidade próxima
+          </div>
+        </div>
+
+        <div id="domainContainer"></div>
+      </div>
+
+      <!-- EMPTY STATE (shown when no age selected) -->
+      <div id="emptyState">
+        <div class="empty-state">
+          <div class="emoji">👆</div>
+          <h3>Selecione uma idade acima</h3>
+          <p>
+            Escolha a faixa etária da criança para visualizar<br />os marcos do
+            desenvolvimento esperados.
+          </p>
+        </div>
+      </div>
+
+      <!-- INFO SECTION -->
+      <div class="info-section">
+        <h2>📖 Como este material foi construído?</h2>
+
+        <div class="info-highlight">
+          <p>
+            Este recurso é baseado no artigo científico
+            <strong
+              >«Evidence-Informed Milestones for Developmental Surveillance
+              Tools»</strong
+            >
+            (Zubler et al., 2022, Pediatrics), publicado pela Academia Americana
+            de Pediatria. Os marcos foram revisados por 8 especialistas e
+            passaram por critérios rigorosos antes de serem incluídos.
+          </p>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-box green">
+            <div class="info-box-icon">📊</div>
+            <h4>Critério dos 75%</h4>
+            <p>
+              Só entrou na lista o marco que
+              <strong>pelo menos 75% das crianças</strong> já alcançaram naquela
+              idade. Isso evita a postura de "esperar para ver", pois não é a
+              média — é uma referência mais exigente.
+            </p>
+          </div>
+          <div class="info-box blue">
+            <div class="info-box-icon">🔬</div>
+            <h4>Base em evidências</h4>
+            <p>
+              Cerca de <strong>80% dos marcos</strong> têm suporte de dados
+              normativos de pelo menos uma fonte científica. Os outros têm apoio
+              de ferramentas de triagem validadas ou opinião clínica publicada.
+            </p>
+          </div>
+          <div class="info-box orange">
+            <div class="info-box-icon">⚠️</div>
+            <h4>Fim dos "sinais de alerta" separados</h4>
+            <p>
+              A nova lista
+              <strong>eliminou a coluna separada de alertas</strong>. Se a
+              criança não atingiu um marco que 75% das crianças já alcançaram,
+              isso por si só já é um sinal para investigar mais.
+            </p>
+          </div>
+          <div class="info-box purple">
+            <div class="info-box-icon">🧠</div>
+            <h4>4 domínios do desenvolvimento</h4>
+            <p>
+              Os marcos são organizados em:
+              <strong
+                >Social-Emocional, Linguagem e Comunicação, Cognitivo</strong
+              >
+              e <strong>Motor</strong> — para facilitar a vigilância em
+              diferentes áreas.
+            </p>
+          </div>
+        </div>
+
+        <div class="info-highlight" style="border-left-color: var(--orange)">
+          <p>
+            ⚠️ <strong>Importante:</strong> Estes checklists
+            <strong>não substituem</strong> triagens validadas como o ASQ-3 ou o
+            M-CHAT-R. Eles são uma ferramenta de <em>vigilância</em> — para
+            orientar conversas entre famílias e profissionais e apoiar o
+            julgamento clínico sobre quando fazer triagens adicionais.
+          </p>
+        </div>
+
+        <div class="info-highlight" style="border-left-color: var(--purple)">
+          <p>
+            🔎 <strong>Por que não usar a mediana (50%)?</strong> Se usássemos a
+            idade média, metade das crianças ainda não teria alcançado o marco —
+            o que levaria o profissional a dizer "é normal" quando talvez
+            houvesse um risco. O critério de 75% é mais sensível sem ser
+            excessivamente restritivo.
+          </p>
+        </div>
+      </div>
+
+      <!-- REFERENCES -->
+      <div class="ref-section">
+        <h3>📚 Referências e materiais</h3>
+        <div class="ref-item">
+          <strong>Artigo original:</strong><br />
+          Zubler JM, Wiggins LD, Macias MM, et al.
+          <em
+            >Evidence-Informed Milestones for Developmental Surveillance
+            Tools.</em
+          >
+          Pediatrics. 2022;149(3):e2021052138.<br />
+          <a href="https://doi.org/10.1542/peds.2021-052138" target="_blank"
+            >🔗 doi.org/10.1542/peds.2021-052138</a
+          >
+        </div>
+        <div class="ref-item">
+          <strong>Programa CDC:</strong> Learn the Signs. Act Early. — Centers
+          for Disease Control and Prevention.<br />
+          <a href="https://www.cdc.gov/ncbddd/actearly/" target="_blank"
+            >🔗 www.cdc.gov/ncbddd/actearly/</a
+          >
+        </div>
+        <div class="ref-item">
+          <strong>Sociedade Brasileira de Neurologia Infantil (SBNI):</strong
+          ><br />
+          Material "Aprenda os Sinais. Aja Cedo." — adaptado do CDC com
+          autorização.<br />
+          <a href="https://sbni.org.br/" target="_blank">🔗 sbni.org.br</a>
+        </div>
+
+        <div class="download-links">
+          <a
+            class="download-btn"
+            href="https://doi.org/10.1542/peds.2021-052138"
+            target="_blank"
+          >
+            <span>📄</span> Artigo Científico (Zubler et al., 2022)
+          </a>
+          <a
+            class="download-btn"
+            href="https://www.cdc.gov/ncbddd/actearly/freematerials.html"
+            target="_blank"
+          >
+            <span>📋</span> Checklists CDC (gratuitos)
+          </a>
+          <a class="download-btn" href="https://sbni.org.br/" target="_blank">
+            <span>🌐</span> Site SBNI
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-contact">
+        <a class="instagram" href="https://instagram.com/sinapiticos" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          @sinapiticos
+        </a>
+        <a class="whatsapp" href="https://wa.me/5511946317579" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          (11) 94631-7579
+        </a>
+      </div>
+      <p>
+        Recurso pedagógico baseado em: Zubler JM et al.
+        <em
+          >Evidence-Informed Milestones for Developmental Surveillance
+          Tools.</em
+        >
+        Pediatrics. 2022;149(3):e2021052138.
+      </p>
+      <p style="margin-top: 6px">
+        Este material é educativo e não substitui avaliação clínica
+        especializada.
+      </p>
+    </footer>
+
+    <script>
+      // =====================
+      // DATA: All milestones
+      // =====================
+      const MILESTONES = {
+        "2m": {
+          label: "2 meses",
+          social: [
+            "Acalma-se quando o cuidador fala ou o pega no colo",
+            "Olha para o rosto do cuidador",
+            "Parece feliz ao ver o cuidador se aproximar",
+            "Sorri quando o cuidador fala ou sorri para ele",
+          ],
+          language: ["Produz sons além do choro", "Reage a sons altos"],
+          cognitive: [
+            "Acompanha com o olhar o movimento do cuidador",
+            "Olha para um brinquedo por vários segundos",
+          ],
+          motor: [
+            "Levanta a cabeça quando de bruços",
+            "Move os dois braços e as duas pernas",
+            "Abre brevemente as mãos",
+          ],
+        },
+        "4m": {
+          label: "4 meses",
+          social: [
+            "Sorri espontaneamente para chamar a atenção",
+            "Dá uma risada quando tentam fazê-la rir",
+            "Olha, se move ou faz sons para obter/manter atenção",
+          ],
+          language: [
+            "Produz sons como 'oooo' e 'aahh' (arrulhos)",
+            "Produz sons em resposta quando o cuidador fala",
+            "Vira a cabeça em direção à voz do cuidador",
+          ],
+          cognitive: [
+            "Abre a boca ao ver o seio ou mamadeira (com fome)",
+            "Olha para as próprias mãos com interesse",
+          ],
+          motor: [
+            "Mantém a cabeça estável sem apoio quando segurado",
+            "Segura um brinquedo colocado em sua mão",
+            "Usa o braço para bater em brinquedos",
+            "Leva as mãos à boca",
+            "Apoia-se nos cotovelos/antebraços de bruço",
+          ],
+        },
+        "6m": {
+          label: "6 meses",
+          social: [
+            "Reconhece pessoas familiares",
+            "Gosta de se olhar no espelho",
+            "Ri",
+          ],
+          language: [
+            "Reveza sons com o cuidador",
+            "Faz 'barulho de framboesa' (língua + sopro)",
+            "Emite sons agudos",
+          ],
+          cognitive: [
+            "Leva objetos à boca para explorá-los",
+            "Alcança para pegar um brinquedo que quer",
+            "Fecha os lábios para indicar que não quer mais comida",
+          ],
+          motor: [
+            "Rola de barriga para cima",
+            "Empurra-se com os braços esticados de bruço",
+            "Apoia-se nas mãos para sentar",
+          ],
+        },
+        "9m": {
+          label: "9 meses",
+          social: [
+            "Fica tímido, grudento ou com medo de estranhos",
+            "Demonstra várias expressões faciais (feliz, triste, raiva, surpresa)",
+            "Olha quando chamado pelo nome",
+            "Reage quando o cuidador vai embora",
+            "Sorri ou ri ao brincar de 'esconde-esconde'",
+          ],
+          language: [
+            "Produz sons variados como 'mamamama' e 'babababa'",
+            "Levanta os braços para ser pegado no colo",
+          ],
+          cognitive: [
+            "Procura objeto que caiu do campo visual",
+            "Bate duas coisas juntas",
+          ],
+          motor: [
+            "Senta-se sozinho",
+            "Senta sem apoio",
+            "Usa os dedos para 'varrer' comida",
+            "Passa objetos de uma mão para a outra",
+          ],
+        },
+        "12m": {
+          label: "12 meses (1 ano)",
+          social: ["Brinca com o cuidador (ex.: bater palminhas)"],
+          language: [
+            "Acena 'tchau'",
+            "Chama o cuidador de 'mamã', 'papá' ou outro nome especial",
+            "Entende 'não' (pausa ou para quando dito)",
+          ],
+          cognitive: [
+            "Coloca algo dentro de um recipiente",
+            "Procura objetos escondidos pelo cuidador",
+          ],
+          motor: [
+            "Puxa-se para ficar em pé",
+            "Anda segurando nos móveis",
+            "Bebe de um copo sem tampa com ajuda",
+            "Pega objetos entre polegar e indicador",
+          ],
+        },
+        "15m": {
+          label: "15 meses",
+          social: [
+            "Imita outras crianças brincando",
+            "Mostra ao cuidador um objeto que gosta",
+            "Bate palmas quando está animado",
+            "Abraça boneco ou brinquedo",
+            "Demonstra afeto (abraços, carinhos, beijos)",
+          ],
+          language: [
+            "Tenta dizer 1 ou 2 palavras além de mamã/papá",
+            "Olha para objeto familiar quando nomeado",
+            "Segue instruções com gesto e palavra juntos",
+            "Aponta para pedir algo ou pedir ajuda",
+          ],
+          cognitive: [
+            "Tenta usar objetos da forma correta (telefone, copo, livro)",
+            "Empilha pelo menos 2 objetos pequenos",
+          ],
+          motor: ["Dá alguns passos sozinho", "Usa os dedos para se alimentar"],
+        },
+        "18m": {
+          label: "18 meses",
+          social: [
+            "Afasta-se, mas verifica se o cuidador está por perto",
+            "Aponta para mostrar algo interessante",
+            "Estende as mãos para que o cuidador as lave",
+            "Olha algumas páginas de um livro com o cuidador",
+            "Ajuda a se vestir (empurra braço pela manga etc.)",
+          ],
+          language: [
+            "Tenta dizer ≥3 palavras além de mamã/papá",
+            "Segue instruções de 1 passo sem gestos",
+          ],
+          cognitive: [
+            "Imita o cuidador fazendo tarefas domésticas",
+            "Brinca com brinquedos de forma simples",
+          ],
+          motor: [
+            "Anda sem se segurar em nada",
+            "Rabisca",
+            "Bebe de um copo sem tampa (pode derramar)",
+            "Alimenta-se com os próprios dedos",
+            "Tenta usar uma colher",
+            "Sobe e desce do sofá/cadeira sem ajuda",
+          ],
+        },
+        "24m": {
+          label: "2 anos (24 meses)",
+          social: [
+            "Percebe quando outros estão machucados ou chateados",
+            "Olha para o rosto do cuidador em situações novas",
+          ],
+          language: [
+            "Aponta para coisas em um livro quando perguntado",
+            "Diz pelo menos 2 palavras juntas (ex.: 'Mais leite')",
+            "Aponta pelo menos 2 partes do corpo quando pedido",
+            "Usa mais gestos além de acenar e apontar",
+          ],
+          cognitive: [
+            "Segura algo com 1 mão enquanto usa a outra",
+            "Tenta usar interruptores, botões ou manivelas de brinquedo",
+            "Brinca com mais de 1 brinquedo ao mesmo tempo",
+          ],
+          motor: [
+            "Chuta uma bola",
+            "Corre",
+            "Sobe alguns degraus (sem escalar)",
+            "Come com colher",
+          ],
+        },
+        "30m": {
+          label: "30 meses (2½ anos)",
+          social: [
+            "Brinca ao lado de outras crianças e às vezes junto",
+            "Mostra suas capacidades dizendo 'Olha para mim!'",
+            "Segue rotinas simples quando instruído",
+          ],
+          language: [
+            "Diz ≥50 palavras",
+            "Diz ≥2 palavras com 1 verbo de ação (ex.: 'Cachorro corre')",
+            "Nomeia objetos em um livro quando apontados",
+            "Usa palavras como 'eu', 'meu' ou 'nós'",
+          ],
+          cognitive: [
+            "Usa objetos para fingir (alimentar boneco com bloco)",
+            "Demonstra resolução simples de problemas",
+            "Segue instruções de 2 passos",
+            "Identifica pelo menos 1 cor",
+          ],
+          motor: [
+            "Usa as mãos para torcer (maçanetas, tampas)",
+            "Tira algumas roupas sozinho",
+            "Salta com os dois pés do chão",
+            "Vira páginas de um livro uma de cada vez",
+          ],
+        },
+        "3a": {
+          label: "3 anos",
+          social: [
+            "Acalma-se em até 10 minutos após a saída do cuidador",
+            "Percebe outras crianças e se junta a elas para brincar",
+          ],
+          language: [
+            "Conversa com ≥2 trocas consecutivas",
+            "Faz perguntas com quem, o quê, onde ou por quê",
+            "Descreve o que está acontecendo em uma figura",
+            "Diz o primeiro nome quando perguntado",
+            "Fala de forma compreensível para outros na maior parte do tempo",
+          ],
+          cognitive: [
+            "Desenha um círculo quando demonstrado",
+            "Evita tocar objetos quentes quando advertido",
+          ],
+          motor: [
+            "Enfia objetos em um fio (contas grandes, macarrão)",
+            "Veste algumas roupas sozinho",
+            "Usa garfo",
+          ],
+        },
+        "4a": {
+          label: "4 anos",
+          social: [
+            "Finge ser outra coisa durante a brincadeira",
+            "Pede para brincar com outras crianças",
+            "Conforta outros que estão machucados ou tristes",
+            "Evita perigos (não pula de alturas perigosas)",
+            "Gosta de ser 'ajudante'",
+            "Muda o comportamento conforme o ambiente",
+          ],
+          language: [
+            "Diz frases com ≥4 palavras",
+            "Diz algumas palavras de uma música ou história",
+            "Conta sobre algo que aconteceu durante o dia",
+            "Responde perguntas simples sobre utilidade de objetos",
+          ],
+          cognitive: [
+            "Nomeia algumas cores de objetos",
+            "Diz o que vem a seguir em uma história conhecida",
+            "Desenha uma pessoa com ≥3 partes do corpo",
+          ],
+          motor: [
+            "Pega uma bola grande na maioria das vezes",
+            "Se serve de comida ou despeja água com supervisão",
+            "Desabotoa alguns botões",
+            "Segura lápis/giz entre os dedos (não em punho)",
+          ],
+        },
+        "5a": {
+          label: "5 anos",
+          social: [
+            "Segue regras ou reveza em jogos com outras crianças",
+            "Canta, dança ou dramatiza para o cuidador",
+            "Faz tarefas simples em casa",
+          ],
+          language: [
+            "Conta uma história com pelo menos 2 eventos",
+            "Responde perguntas simples sobre um livro/história",
+            "Mantém conversa com >3 trocas consecutivas",
+            "Usa ou reconhece rimas simples",
+          ],
+          cognitive: [
+            "Conta até 10",
+            "Nomeia alguns números entre 1 e 5",
+            "Usa palavras de tempo (ontem, amanhã, manhã, noite)",
+            "Mantém atenção por 5–10 min em atividades",
+            "Escreve algumas letras do próprio nome",
+            "Nomeia algumas letras quando apontadas",
+          ],
+          motor: ["Abotoa alguns botões", "Pula em um pé só"],
+        },
+      };
+
+      const AGE_ORDER = [
+        "2m",
+        "4m",
+        "6m",
+        "9m",
+        "12m",
+        "15m",
+        "18m",
+        "24m",
+        "30m",
+        "3a",
+        "4a",
+        "5a",
+      ];
+
+      const DOMAIN_CONFIG = {
+        social: {
+          label: "Social-Emocional",
+          icon: "🤝",
+          desc: "Relacionamentos, emoções e interações sociais",
+          cls: "domain-social",
+        },
+        language: {
+          label: "Linguagem e Comunicação",
+          icon: "💬",
+          desc: "Fala, sons, gestos e compreensão",
+          cls: "domain-language",
+        },
+        cognitive: {
+          label: "Cognitivo",
+          icon: "🧠",
+          desc: "Aprendizado, memória, resolução de problemas e exploração",
+          cls: "domain-cognitive",
+        },
+        motor: {
+          label: "Motor",
+          icon: "🏃",
+          desc: "Movimento, coordenação, habilidades físicas e manuais",
+          cls: "domain-motor",
+        },
+      };
+
+      let selectedAge = null;
+
+      function init() {
+        const grid = document.getElementById("ageGrid");
+        AGE_ORDER.forEach((key) => {
+          const btn = document.createElement("button");
+          btn.className = "age-btn";
+          btn.textContent = MILESTONES[key].label;
+          btn.onclick = () => selectAge(key);
+          btn.dataset.key = key;
+          grid.appendChild(btn);
+        });
+      }
+
+      function selectAge(key) {
+        selectedAge = key;
+        document
+          .querySelectorAll(".age-btn")
+          .forEach((b) => b.classList.toggle("active", b.dataset.key === key));
+        renderResults(key);
+      }
+
+      function getAdjacentAges(key) {
+        const idx = AGE_ORDER.indexOf(key);
+        const before = idx > 0 ? AGE_ORDER[idx - 1] : null;
+        const after = idx < AGE_ORDER.length - 1 ? AGE_ORDER[idx + 1] : null;
+        return { before, after };
+      }
+
+      function renderResults(key) {
+        document.getElementById("emptyState").style.display = "none";
+        const results = document.getElementById("results");
+        results.className = "visible";
+
+        document.getElementById("selectedAgeLabel").textContent =
+          MILESTONES[key].label;
+        const { before, after } = getAdjacentAges(key);
+
+        let introText = `Marcos esperados para ${MILESTONES[key].label}.`;
+        if (before)
+          introText += ` Também estão indicadas habilidades da fase anterior (${MILESTONES[before].label})`;
+        if (after)
+          introText +=
+            (before ? " e" : " Também estão indicadas habilidades") +
+            ` da próxima fase (${MILESTONES[after].label})`;
+        if (before || after) introText += ".";
+        document.getElementById("resultsIntro").textContent = introText;
+
+        const container = document.getElementById("domainContainer");
+        container.innerHTML = "";
+
+        ["social", "language", "cognitive", "motor"].forEach((domain) => {
+          const cfg = DOMAIN_CONFIG[domain];
+          const current = (MILESTONES[key][domain] || []).map((t) => ({
+            text: t,
+            type: "exact",
+            age: MILESTONES[key].label,
+          }));
+          const prev = before
+            ? (MILESTONES[before][domain] || []).map((t) => ({
+                text: t,
+                type: "before",
+                age: MILESTONES[before].label,
+              }))
+            : [];
+          const next = after
+            ? (MILESTONES[after][domain] || []).map((t) => ({
+                text: t,
+                type: "after",
+                age: MILESTONES[after].label,
+              }))
+            : [];
+
+          const all = [...prev, ...current, ...next];
+          if (all.length === 0) return;
+
+          const card = document.createElement("div");
+          card.className = `domain-card ${cfg.cls}`;
+
+          card.innerHTML = `
+      <div class="domain-header">
+        <div class="domain-icon">${cfg.icon}</div>
+        <div>
+          <h3>${cfg.label}</h3>
+          <p>${cfg.desc}</p>
+        </div>
+      </div>
+      <div class="milestone-list">
+        ${all
+          .map((m) => {
+            const ageClass =
+              m.type === "exact"
+                ? "age-exact"
+                : m.type === "before"
+                  ? "age-before"
+                  : "age-after";
+            return `<div class="milestone-item">
+            <div class="milestone-dot"></div>
+            <div class="milestone-text">${m.text}</div>
+            <div class="milestone-age ${ageClass}">${m.age}</div>
+          </div>`;
+          })
+          .join("")}
+      </div>
+    `;
+          container.appendChild(card);
+        });
+      }
+
+      init();
+    </script>
+  </body>
+</html>

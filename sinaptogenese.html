@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sinaptogênese — Animação Didática</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #07090f;
+        --surface: #0f1320;
+        --border: rgba(120, 160, 240, 0.12);
+        --text-primary: #e8edf8;
+        --text-secondary: #7a8aaa;
+        --accent: #4a9eff;
+        --accent-dim: rgba(74, 158, 255, 0.15);
+        --teal: #38d9a9;
+        --teal-dim: rgba(56, 217, 169, 0.12);
+        --amber: #fcc419;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text-primary);
+        font-family: "DM Mono", monospace;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 1rem 3rem;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 2rem;
+        max-width: 640px;
+      }
+
+      header h1 {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(1.8rem, 5vw, 2.8rem);
+        color: var(--text-primary);
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+      }
+
+      header h1 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+
+      header p {
+        margin-top: 0.6rem;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+        letter-spacing: 0.02em;
+      }
+
+      .wrapper {
+        width: 100%;
+        max-width: 900px;
+      }
+
+      .canvas-container {
+        position: relative;
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        background: #080b14;
+      }
+
+      canvas {
+        display: block;
+        width: 100%;
+      }
+
+      /* Phase indicator strip */
+      .phase-strip {
+        display: flex;
+        gap: 4px;
+        padding: 10px 14px;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+      }
+
+      .phase-dot {
+        flex: 1;
+        height: 3px;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.08);
+        transition: background 0.4s;
+      }
+
+      .phase-dot.active {
+        background: var(--accent);
+      }
+      .phase-dot.done {
+        background: var(--teal);
+      }
+
+      /* Info panel */
+      .info-panel {
+        padding: 14px 16px 10px;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .phase-badge {
+        font-size: 0.65rem;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+        background: var(--accent-dim);
+        border: 1px solid rgba(74, 158, 255, 0.25);
+        border-radius: 4px;
+        padding: 2px 8px;
+        white-space: nowrap;
+        margin-top: 2px;
+      }
+
+      .phase-text {
+        font-size: 0.8rem;
+        color: var(--text-primary);
+        line-height: 1.5;
+        flex: 1;
+      }
+
+      .phase-desc {
+        font-size: 0.72rem;
+        color: var(--text-secondary);
+        margin-top: 2px;
+        line-height: 1.5;
+      }
+
+      /* Controls */
+      .controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 12px 16px;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        border-radius: 0 0 12px 12px;
+      }
+
+      .ctrl-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+        min-width: 160px;
+      }
+
+      .ctrl-group label {
+        font-size: 0.72rem;
+        color: var(--text-secondary);
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+      }
+
+      .ctrl-group .val {
+        font-size: 0.72rem;
+        color: var(--accent);
+        min-width: 26px;
+      }
+
+      input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        flex: 1;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--accent);
+        border: 2px solid var(--bg);
+        cursor: pointer;
+        transition: transform 0.15s;
+      }
+
+      input[type="range"]:hover::-webkit-slider-thumb {
+        transform: scale(1.2);
+      }
+
+      .btn {
+        font-family: "DM Mono", monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+        color: var(--text-secondary);
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 5px 14px;
+        cursor: pointer;
+        transition:
+          color 0.2s,
+          border-color 0.2s,
+          background 0.2s;
+        white-space: nowrap;
+      }
+
+      .btn:hover {
+        color: var(--text-primary);
+        border-color: rgba(120, 160, 240, 0.3);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .btn.primary {
+        color: var(--accent);
+        border-color: rgba(74, 158, 255, 0.3);
+        background: var(--accent-dim);
+      }
+      .btn.primary:hover {
+        background: rgba(74, 158, 255, 0.22);
+      }
+
+      /* Legend */
+      .legend {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+        padding: 12px 16px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface);
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.72rem;
+        color: var(--text-secondary);
+      }
+
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .legend-line {
+        width: 18px;
+        height: 2px;
+        border-radius: 1px;
+        flex-shrink: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Sinaptogênese<br /><em>neural</em></h1>
+      <p>
+        Visualização das cinco fases do desenvolvimento sináptico —<br />da
+        proliferação neuronal ao refinamento das conexões.
+      </p>
+    </header>
+
+    <div class="wrapper">
+      <div class="canvas-container">
+        <canvas id="stage"></canvas>
+
+        <div class="phase-strip" id="phase-strip">
+          <div class="phase-dot" id="pd0"></div>
+          <div class="phase-dot" id="pd1"></div>
+          <div class="phase-dot" id="pd2"></div>
+          <div class="phase-dot" id="pd3"></div>
+          <div class="phase-dot" id="pd4"></div>
+        </div>
+
+        <div class="info-panel">
+          <span class="phase-badge" id="badge">FASE 1</span>
+          <div>
+            <div class="phase-text" id="phase-title">Proliferação neuronal</div>
+            <div class="phase-desc" id="phase-desc">
+              Células-tronco na zona ventricular geram neurônios que ainda não
+              migraram.
+            </div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="ctrl-group">
+            <label>VELOCIDADE</label>
+            <input
+              type="range"
+              min="0.3"
+              max="3.5"
+              step="0.1"
+              value="1"
+              id="speed"
+            />
+            <span class="val" id="speed-out">1.0×</span>
+          </div>
+          <div class="ctrl-group">
+            <label>NEURÔNIOS</label>
+            <input
+              type="range"
+              min="8"
+              max="28"
+              step="1"
+              value="16"
+              id="neuron-count"
+            />
+            <span class="val" id="count-out">16</span>
+          </div>
+          <button class="btn primary" onclick="restart()">↺ Reiniciar</button>
+          <button class="btn" id="btn-pause" onclick="togglePause()">
+            ⏸ Pausar
+          </button>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #5bc4f5"></div>
+          Soma (corpo celular)
+        </div>
+        <div class="legend-item">
+          <div
+            class="legend-dot"
+            style="background: #ffffa0; width: 6px; height: 6px"
+          ></div>
+          Cone de crescimento
+        </div>
+        <div class="legend-line" style="background: #4a9eff"></div>
+        <span style="font-size: 0.72rem; color: var(--text-secondary)"
+          >Sinapse fraca</span
+        >
+        <div class="legend-line" style="background: #38d9a9"></div>
+        <span style="font-size: 0.72rem; color: var(--text-secondary)"
+          >Sinapse consolidada</span
+        >
+        <div class="legend-item">
+          <div
+            class="legend-dot"
+            style="
+              background: #fcc419;
+              width: 7px;
+              height: 7px;
+              border-radius: 50%;
+            "
+          ></div>
+          Pulso sináptico
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("stage");
+      const ctx = canvas.getContext("2d");
+
+      const PHASES = [
+        {
+          name: "Proliferação neuronal",
+          desc: "Células-tronco na zona ventricular geram neurônios que ainda não migraram.",
+          dur: 80,
+        },
+        {
+          name: "Migração neuronal",
+          desc: "Neurônios se deslocam ao longo de células gliais radiais até a posição cortical definitiva.",
+          dur: 100,
+        },
+        {
+          name: "Diferenciação morfológica",
+          desc: "Axônio e dendritos crescem. Espinhas dendríticas se formam nos pontos de contato futuro.",
+          dur: 130,
+        },
+        {
+          name: "Sinaptogênese",
+          desc: "O cone de crescimento explora o ambiente e forma sinapses ao contatar neurônios-alvo.",
+          dur: 180,
+        },
+        {
+          name: "Refinamento sináptico",
+          desc: "Sinapses ativas se fortalecem (LTP). Sinapses inativas são eliminadas — poda sináptica.",
+          dur: 200,
+        },
+      ];
+
+      let W,
+        H,
+        neurons,
+        synapses,
+        phase,
+        phaseTimer,
+        animFrame,
+        paused = false,
+        tick = 0;
+
+      function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        W = Math.max(rect.width, 320);
+        H = Math.round(W * 0.55);
+        canvas.width = W;
+        canvas.height = H;
+      }
+
+      function rand(a, b) {
+        return a + Math.random() * (b - a);
+      }
+      function lerp(a, b, t) {
+        return a + (b - a) * t;
+      }
+
+      /* ---- Neuron ---- */
+      class Neuron {
+        constructor(id) {
+          this.id = id;
+          this.tx = rand(W * 0.09, W * 0.91);
+          this.ty = rand(H * 0.12, H * 0.88);
+          this.x = W / 2 + rand(-40, 40);
+          this.y = H / 2 + rand(-40, 40);
+          this.r = rand(7, 13);
+          this.hue = 185 + ((id * 31) % 90);
+          this.color = `hsl(${this.hue},70%,65%)`;
+          this.born = false;
+          this.birthT = 0;
+          this.dendrites = this._genDendrites();
+          this.axon = { pts: [] };
+          this.growthCone = false;
+          this.connected = false;
+          this.activity = 0;
+          this.apoptosis = false;
+        }
+
+        _genDendrites() {
+          const n = Math.floor(rand(4, 8));
+          return Array.from({ length: n }, (_, i) => ({
+            ang: (i / n) * Math.PI * 2 + rand(-0.35, 0.35),
+            len: rand(20, 40) * (this.r / 10),
+            grown: 0,
+          }));
+        }
+      }
+
+      /* ---- Synapse ---- */
+      class Synapse {
+        constructor(pre, post) {
+          this.pre = pre;
+          this.post = post;
+          this.strength = rand(0.25, 0.75);
+          this.alpha = 0;
+          this.pulseT = -1;
+          this.alive = true;
+        }
+      }
+
+      /* ---- Init ---- */
+      function initNeurons() {
+        const count = parseInt(document.getElementById("neuron-count").value);
+        neurons = Array.from({ length: count }, (_, i) => new Neuron(i));
+        synapses = [];
+        phase = 0;
+        phaseTimer = 0;
+        tick = 0;
+        updatePhaseUI(0);
+      }
+
+      /* ---- Drawing ---- */
+      function drawBg() {
+        ctx.fillStyle = "#080b14";
+        ctx.fillRect(0, 0, W, H);
+        ctx.strokeStyle = "rgba(255,255,255,0.025)";
+        ctx.lineWidth = 0.5;
+        for (let x = 0; x < W; x += 44) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, H);
+          ctx.stroke();
+        }
+        for (let y = 0; y < H; y += 44) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(W, y);
+          ctx.stroke();
+        }
+      }
+
+      function drawNeuron(n) {
+        if (!n.born) return;
+        const scale = Math.min(n.birthT / 16, 1);
+        ctx.save();
+        ctx.translate(n.x, n.y);
+
+        // glow on activation
+        if (n.activity > 0) {
+          const g = ctx.createRadialGradient(0, 0, n.r, 0, 0, n.r * 3.8);
+          g.addColorStop(0, `hsla(${n.hue},80%,70%,${0.4 * n.activity})`);
+          g.addColorStop(1, "transparent");
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(0, 0, n.r * 3.8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // dendrites
+        if (phase >= 2) {
+          ctx.strokeStyle = `hsla(${n.hue},55%,65%,0.5)`;
+          ctx.lineWidth = 1.2;
+          for (const d of n.dendrites) {
+            const prog = Math.min(d.grown / d.len, 1);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            const ex = Math.cos(d.ang) * d.len * prog;
+            const ey = Math.sin(d.ang) * d.len * prog;
+            ctx.lineTo(ex, ey);
+            ctx.stroke();
+            if (prog > 0.65) {
+              ctx.fillStyle = `hsla(${n.hue},80%,78%,0.75)`;
+              ctx.beginPath();
+              ctx.arc(ex, ey, 2.4, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+        }
+
+        // axon path
+        if (phase >= 3 && n.axon.pts.length > 1) {
+          ctx.strokeStyle = `hsla(${(n.hue + 60) % 360},60%,65%,0.65)`;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(n.axon.pts[0].x - n.x, n.axon.pts[0].y - n.y);
+          for (let i = 1; i < n.axon.pts.length; i++)
+            ctx.lineTo(n.axon.pts[i].x - n.x, n.axon.pts[i].y - n.y);
+          ctx.stroke();
+
+          // growth cone
+          if (n.growthCone && !n.connected) {
+            const tip = n.axon.pts[n.axon.pts.length - 1];
+            ctx.fillStyle = "#ffffa0";
+            ctx.beginPath();
+            ctx.arc(tip.x - n.x, tip.y - n.y, 3.8, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        // soma
+        const alpha = n.apoptosis ? 0.2 : 0.88 * scale;
+        ctx.fillStyle = n.apoptosis ? "#445" : n.color;
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(0, 0, n.r * scale, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        // nucleus highlight
+        ctx.fillStyle = "rgba(255,255,255,0.15)";
+        ctx.beginPath();
+        ctx.arc(0, 0, n.r * 0.44 * scale, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      function drawSynapses() {
+        for (const s of synapses) {
+          if (s.alpha <= 0) continue;
+          const tip =
+            s.pre.axon.pts.length > 0
+              ? s.pre.axon.pts[s.pre.axon.pts.length - 1]
+              : { x: s.pre.x, y: s.pre.y };
+
+          const cx = (tip.x + s.post.x) / 2 + (s.post.y - tip.y) * 0.2;
+          const cy = (tip.y + s.post.y) / 2 - (s.post.x - tip.x) * 0.2;
+
+          ctx.save();
+          ctx.globalAlpha = s.alpha * Math.max(0.1, s.strength);
+          ctx.strokeStyle = s.strength > 0.6 ? "#38d9a9" : "#4a9eff";
+          ctx.lineWidth = s.strength > 0.6 ? 1.8 : 1;
+          ctx.beginPath();
+          ctx.moveTo(tip.x, tip.y);
+          ctx.quadraticCurveTo(cx, cy, s.post.x, s.post.y);
+          ctx.stroke();
+
+          // pulse dot
+          if (s.pulseT >= 0) {
+            const pt = s.pulseT;
+            const px = lerp(lerp(tip.x, cx, pt), lerp(cx, s.post.x, pt), pt);
+            const py = lerp(lerp(tip.y, cy, pt), lerp(cy, s.post.y, pt), pt);
+            ctx.fillStyle = "#fcc419";
+            ctx.globalAlpha = 0.95;
+            ctx.beginPath();
+            ctx.arc(px, py, 3, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.restore();
+        }
+      }
+
+      /* ---- Update ---- */
+      function update() {
+        const sp = parseFloat(document.getElementById("speed").value);
+
+        phaseTimer += sp;
+        tick += sp;
+
+        const p = PHASES[phase];
+
+        if (phase === 0) {
+          const interval = p.dur / neurons.length;
+          neurons.forEach((n, i) => {
+            if (phaseTimer > i * interval) {
+              n.born = true;
+              n.birthT = Math.min(n.birthT + sp, 20);
+            }
+          });
+        }
+
+        if (phase === 1) {
+          neurons.forEach((n) => {
+            n.birthT = Math.min(n.birthT + sp, 20);
+            n.x = lerp(n.x, n.tx, 0.008 * sp);
+            n.y = lerp(n.y, n.ty, 0.008 * sp);
+          });
+        }
+
+        if (phase === 2) {
+          neurons.forEach((n) => {
+            n.dendrites.forEach((d) => {
+              d.grown = Math.min(d.grown + sp * rand(0.3, 0.9), d.len);
+            });
+          });
+        }
+
+        if (phase === 3) {
+          neurons.forEach((n) => {
+            if (n.connected) return;
+            if (n.axon.pts.length === 0) n.axon.pts.push({ x: n.x, y: n.y });
+
+            let target = null,
+              best = Infinity;
+            neurons.forEach((m) => {
+              if (m === n || m.connected) return;
+              const dx = m.x - n.x,
+                dy = m.y - n.y;
+              const d = Math.sqrt(dx * dx + dy * dy);
+              if (d < best && d > 28) {
+                best = d;
+                target = m;
+              }
+            });
+            if (!target) return;
+
+            const tip = n.axon.pts[n.axon.pts.length - 1];
+            const dx = target.x - tip.x,
+              dy = target.y - tip.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist > target.r + 5) {
+              const step = sp * rand(1.1, 2.2);
+              n.axon.pts.push({
+                x: tip.x + (dx / dist) * step + rand(-1.4, 1.4),
+                y: tip.y + (dy / dist) * step + rand(-1.4, 1.4),
+              });
+              n.growthCone = true;
+            } else {
+              n.connected = true;
+              n.growthCone = false;
+              synapses.push(new Synapse(n, target));
+            }
+          });
+          synapses.forEach((s) => {
+            s.alpha = Math.min(s.alpha + sp * 0.03, 1);
+          });
+        }
+
+        if (phase === 4) {
+          synapses.forEach((s) => {
+            if (!s.alive) return;
+            s.strength += sp * rand(-0.003, 0.007);
+            s.strength = Math.max(0, Math.min(1, s.strength));
+            if (s.strength < 0.07) {
+              s.alive = false;
+            }
+
+            if (Math.random() < 0.007 * sp) s.pulseT = 0;
+            if (s.pulseT >= 0) {
+              s.pulseT += sp * 0.026;
+              if (s.pulseT > 1) {
+                s.pulseT = -1;
+                s.post.activity = 1;
+              }
+            }
+            s.alpha = s.alive
+              ? Math.min(s.alpha + sp * 0.01, 1)
+              : Math.max(s.alpha - sp * 0.025, 0);
+          });
+          neurons.forEach((n) => {
+            n.activity = Math.max(n.activity - sp * 0.035, 0);
+            if (!n.connected && Math.random() < 0.0008 * sp) n.apoptosis = true;
+          });
+        }
+
+        if (phaseTimer >= p.dur && phase < PHASES.length - 1) {
+          phase++;
+          phaseTimer = 0;
+          updatePhaseUI(phase);
+        }
+      }
+
+      function updatePhaseUI(p) {
+        document.getElementById("badge").textContent = `FASE ${p + 1}`;
+        document.getElementById("phase-title").textContent = PHASES[p].name;
+        document.getElementById("phase-desc").textContent = PHASES[p].desc;
+        for (let i = 0; i < 5; i++) {
+          const el = document.getElementById(`pd${i}`);
+          el.className =
+            "phase-dot" + (i < p ? " done" : i === p ? " active" : "");
+        }
+      }
+
+      /* ---- Loop ---- */
+      function loop() {
+        if (paused) return;
+        drawBg();
+        drawSynapses();
+        neurons.forEach((n) => drawNeuron(n));
+        update();
+        animFrame = requestAnimationFrame(loop);
+      }
+
+      function restart() {
+        cancelAnimationFrame(animFrame);
+        paused = false;
+        document.getElementById("btn-pause").textContent = "⏸ Pausar";
+        resize();
+        initNeurons();
+        loop();
+      }
+
+      function togglePause() {
+        paused = !paused;
+        document.getElementById("btn-pause").textContent = paused
+          ? "▶ Continuar"
+          : "⏸ Pausar";
+        if (!paused) loop();
+      }
+
+      /* ---- Controls ---- */
+      document.getElementById("speed").addEventListener("input", function () {
+        document.getElementById("speed-out").textContent =
+          parseFloat(this.value).toFixed(1) + "×";
+      });
+
+      document
+        .getElementById("neuron-count")
+        .addEventListener("input", function () {
+          document.getElementById("count-out").textContent = this.value;
+        });
+
+      window.addEventListener("resize", () => {
+        cancelAnimationFrame(animFrame);
+        resize();
+        initNeurons();
+        loop();
+      });
+
+      resize();
+      initNeurons();
+      loop();
+    </script>
+  </body>
+</html>
